@@ -34,13 +34,11 @@ char	*get_word(char *str, t_list **tmp)
 {
 	int		i;
 	int		r;
-	int		j;
 	char	*new;
 
 	new = malloc(get_len_word(str) + 1);
 	i = 0;
 	r = 0;
-	j = 0;
 	while (str[i] && (str[i] == ' ' || str[i] == '\t' || ft_strchr("\'\"",
 				str[i])))
 		i++;
@@ -49,12 +47,11 @@ char	*get_word(char *str, t_list **tmp)
 	{
 		while ((*tmp) && (*tmp)->token != LIMITOR)
 			(*tmp) = (*tmp)->next;
-		// dprintf(2, "tmp->content = %s\n", (*tmp)->content);
 		if (str[i] == '$')
 		{
 			if ((str[i + 1] && str[i + 1] != '\'' && str[i + 1] != '\"') || str[i + 1] == '\0')
 			{
-				j = 1;
+				// j = 1;
 				new[r++] = '$';
 				i++;
 			}
@@ -67,12 +64,5 @@ char	*get_word(char *str, t_list **tmp)
 			i++;
 	}
 	new[r] = 0;
-	if (j == 1)
-	{
-		free((*tmp)->content);
-		(*tmp)->content = ft_strdup(new);
-	}
-	// dprintf(2, "new = %s\n", new);
-	// dprintf(2, "tmp->content = %s\n", (*tmp)->content);
 	return (new);
 }

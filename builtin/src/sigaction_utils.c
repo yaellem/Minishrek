@@ -15,7 +15,7 @@
 void	sigint_handler_default(int signum)
 {
 	(void)signum;
-	g_status = 130;
+	g_data_signal_exit[0] = 130;
 	ft_putchar_fd(10, 2);
 	rl_on_new_line();
 	rl_replace_line("", 0);
@@ -34,7 +34,7 @@ void	sig_handler_heredoc(int signum)
 {
 	if (signum == SIGINT)
 	{
-		g_status = 130;
+		g_data_signal_exit[0] = 130;
 		ft_putchar_fd(10, 2);
 		close(0);
 		close(1);

@@ -12,7 +12,8 @@
 
 #include "minishell.h"
 
-int	g_status;
+// int	g_status;
+uint64_t			g_data_signal_exit[3] = {0, 0, 0};
 
 void	free_list(t_list *lst)
 {
@@ -58,18 +59,30 @@ int	is_builtin(char **cmds)
 		return (0);
 	return (1);
 }
+
 void	free_data(t_data *data)
 {
 	int	i;
 
 	i = 0;
 	free_list(data->first);
+	data->first = NULL;
 	free_list_env(data->env_list);
+	data->env_list = NULL;
 	free_tab2(data->tb_cmd);
+	data->tb_cmd = NULL;
 	free_tab1(data->envi);
+	data->envi = NULL;
+	if (data->exec)
+	{
+		free_tab1(data->exec->path);
+		data->exec->path = NULL;
+		free(data->exec->pids);
+		data->exec->pids = NULL;
+	}
 	free(data->exec);
 	data->exec = NULL;
-	while (i < data->nb_here)
+	while (i < data->nb_here && data->here)
 	{
 		free(data->here[i].delim);
 		data->here[i].delim = NULL;
@@ -92,6 +105,7 @@ int	main(int ac, char **av, char **env)
 	(void)av;
 	
 	data = starton();
+	g_data_signal_exit[1] = (uint64_t)data;
 	// ft_memset(data, 0, sizeof(t_data));
 	data->env_list = creat_env_lst(env);
 	data->envi = env2(data->env_list);
@@ -109,6 +123,7 @@ int	main(int ac, char **av, char **env)
 			continue ;
 		add_history(line);
 		str = ft_strdup(line);
+		g_data_signal_exit[2] = (uint64_t)str; // Used to free in child of here doc
 		if (verif_quote(line, data) <= 0)
 		{
 			ft_negative(line);
@@ -125,22 +140,18 @@ int	main(int ac, char **av, char **env)
 				get_token5(&data->first);
 				data->tb_cmd = tab_cmd(data);
 				input_lexer(data);
-				here_doc(data, str);
-				free(str);
-				str = NULL;
-				if (data->tb_cmd[0] != NULL && data->tb_cmd && data->tb_cmd[0][0] && data->here_status == 0)
-					loop_cmd(data);
-				data->here_status = 0;
+				if (here_doc(data, str) == TRUE)
+				{
+					free(str);
+					str = NULL;
+					if (data->tb_cmd[0] != NULL && data->tb_cmd && data->tb_cmd[0][0] && data->here_status == 0)
+						loop_cmd(data);
+					data->here_status = 0;
+				}
 			}
 		}
 		free(str);
 		str = NULL;
-		// free_tab2(data->tb_cmd);
-		// data->tb_cmd = NULL;
-		// free(data->exec->pids);
-		// data->exec->pids = NULL;
-		// free(data->exec);
-		// data->exec = NULL;
 		free_list(data->first);
 		data->first = NULL;
 	}

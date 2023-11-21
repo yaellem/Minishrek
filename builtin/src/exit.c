@@ -61,9 +61,6 @@ int	exit_builtin(char **cmd, t_data *data, int e)
 		printf("exit\n");
 	if (!cmd[1])
 	{
-		free_tab1(data->exec->path);
-		free(data->exec->pids);
-		free(data->exec);
 		free_data(data);
 		exit(0);
 	}
@@ -74,9 +71,6 @@ int	exit_builtin(char **cmd, t_data *data, int e)
 		{
 			if (e == 1)
 				ft_printf_fd(2, EXIT_ERR, cmd[1]);
-			free_tab1(data->exec->path);
-			free(data->exec->pids);
-			free(data->exec);
 			free_data(data);
 			exit(2);
 		}
@@ -87,18 +81,12 @@ int	exit_builtin(char **cmd, t_data *data, int e)
 		if (e == 1)
 		{
 			ft_printf_fd(2, EXIT_NBR, cmd[1]);
-			free_tab1(data->exec->path);
-			free(data->exec->pids);
-			free(data->exec);
 			free_data(data);
 			exit(1);	
 		}
 		return (1);
 	}
 	cmd1 = ft_strdup(cmd[1]);
-	free_tab1(data->exec->path);
-	free(data->exec->pids);
-	free(data->exec);
 	free_data(data);
 	exit(ft_atoull_exit(cmd1, e));
 }

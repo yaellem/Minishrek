@@ -12,16 +12,49 @@
 
 #include "../minishell.h"
 
-t_here	*here_doc(t_data *data, char *str)
+void	*ft_free_m(void **ptr)
+{
+	if (*ptr)
+		free(*ptr);
+	*ptr = NULL;
+	return (NULL);
+}
+
+static void	exit_hd(int sig)
+{
+	t_data	*data;
+	int		i;
+
+	data = (t_data *)g_data_signal_exit[1];
+	if (sig == SIGINT)
+	{
+		ft_putchar_fd('\n', 2);
+		i = -1;
+		while (++i < data->nb_here)
+		{
+			close(data->here[i].pipe[1]);
+			close(data->here[i].pipe[0]);
+		}
+		free((void *)g_data_signal_exit[2]);
+		free_data((t_data *)g_data_signal_exit[1]);
+		g_data_signal_exit[1] = 0;
+		g_data_signal_exit[2] = 0;
+		exit(130);
+	}
+}
+
+
+int 	here_doc(t_data *data, char *str)
 {
 	int		i;
 	pid_t	pid;
 
 	data->nb_here = count_hd(data->first);
 	if (!data->nb_here)
-		return (NULL);
+		return (TRUE);
 	data->here = ft_calloc(sizeof(t_here), data->nb_here);
 	ft_getdelims(str, data->here, data);
+	// signal(SIGINT, &exit_hd);
 	signal(SIGINT, SIG_IGN);
 	// config_signals(DEFAULT_SIG);
 	pid = fork();
@@ -41,8 +74,18 @@ t_here	*here_doc(t_data *data, char *str)
 	{
 		data->here_status = 1;
 		data->exit_code = 130;
+		for (int i = 0; i < data->nb_here; i++)
+		{
+			free(data->here[i].delim);
+			data->here[i].delim = NULL;
+			i++;
+		}
+		free(data->here);
+		data->here = NULL;
+		free_data_in_parent(data);
+		return (FALSE);
 	}
-	return (NULL);
+	return (TRUE);
 }
 
 int	count_hd(t_list *list)
@@ -94,48 +137,10 @@ void	ft_getdelims(char *str, t_here *here, t_data *data)
 				i++;
 				here[nb].delim = get_word(&str[i], &tmp);
 				pipe(here[nb].pipe);
-				// dprintf(2,"fd heredoc %d = %d et %d\n", nb, here[nb].pipe[1], here[nb].pipe[0]);
 				nb++;
 			}
 		}
 		i++;
-	}
-}
-
-void	*ft_free_m(void **ptr)
-{
-	if (*ptr)
-		free(*ptr);
-	*ptr = NULL;
-	return (NULL);
-}
-
-static void	exit_hd(int sig)
-{
-	t_data	*data;
-	int		i;
-
-	data = starton();
-	// static t_data	data = {0};
-	// printf("data->here-----------> : %p\n", data->here);
-	if (sig == SIGINT)
-	{
-		ft_putchar_fd('\n', 2);
-		i = -1;
-		while (++i < data->nb_here)
-		{
-			// dprintf(2,"CLOSE fd heredoc %d = %d et %d\n", i, data->here[i].pipe[1], data->here[i].pipe[0]);
-			close(data->here[i].pipe[1]);
-			close(data->here[i].pipe[0]);
-			if (data->here[i].delim != NULL)
-				ft_free_m((void **)&data->here[i].delim);
-		}
-		free_data(data);
-		// rl_replace_line("", 0);
-		// rl_on_new_line();
-		// rl_redisplay();
-		// free_all(2, 2, &data->str, &data->here, data->path, data->env);
-		exit(130);
 	}
 }
 
@@ -146,13 +151,12 @@ void	child_hd(t_data *data, char *str)
 
 	data->n = data->n + 1;
 	(void)str;
-	// config_signals(HEREDOC_SIG);
 	i = -1;
 	while (++i < data->nb_here)
 		openfileshd(i, data->here);
+	printf("Child hd before free data\n");
 	free(str);
 	free_data(data);
-	// ici free TOUT CE QUI A ETE ALLOUEE avant d'avoir appele la fonction heredoc
 	exit(1);
 }
 
@@ -160,7 +164,6 @@ char	*openfileshd(int index, t_here *here)
 {
 	char	*s;
 
-	// config_signals(HEREDOC_SIG);
 	signal(SIGINT, &exit_hd);
 	while (1)
 	{
@@ -168,20 +171,9 @@ char	*openfileshd(int index, t_here *here)
 		if (!s || !ft_strcmp(s, here[index].delim))
 			break ;
 		ft_putendl_fd(s, here[index].pipe[1]); 
-		// config_signals(HEREDOC_SIG, here[index].pipe[1], here[index].pipe[0]);
 		free(s);
 	}
 	close(here[index].pipe[1]);
 	close(here[index].pipe[0]);
 	return (NULL);
 }
-
-// void    free_heredoc(t_here *here, t_data *data)
-// {
-//     while(data->nb_here >= 0)
-//     {
-//         free(here[data->nb_here]->delim);
-//         close(here[data->nb_here]->pipe[0]);
-//         data->nb_here--;
-//     }
-// }

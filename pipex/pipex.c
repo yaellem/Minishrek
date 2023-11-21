@@ -60,6 +60,7 @@ void	loop_cmd(t_data *data)
 		ret = ft_verif_built(data->exec->cmds, data);
 		if(ret != NO_BUILTIN) 
 		{
+			data->exit_code = 0;
 			free_data_in_parent(data);
 			return;
 		}
@@ -70,10 +71,9 @@ void	loop_cmd(t_data *data)
 		if ((data->exec->cmdpath = access_check(data->exec->path, data->exec->cmds[0])) == NULL)
 		{
 			i++;
+			data->exit_code = 130;
 			continue;
 		}	
-			// return (free_data_in_parent(data));
-
 		data->exec->j = i;
 		if (pipe(data->exec->fd) == -1)
 			free_all_data(data, 1, i);

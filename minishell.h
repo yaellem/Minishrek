@@ -39,10 +39,13 @@
 #define BUILTIN_RET -42
 #define BUILTIN_ERR 1
 #define NO_BUILTIN  -1
-
+#define FALSE	1
+#define TRUE 0
 typedef struct s_data	t_data;
 
-extern int				g_status;
+// extern int				g_status;
+extern	uint64_t			g_data_signal_exit[3];
+
 
 typedef enum e_signals
 {
@@ -131,6 +134,7 @@ typedef struct s_data
 	int					cat;
 }						t_data;
 
+
 void					free_list_env(t_env *env);
 void					ft_negative(char *line);
 int						verif_quote(char *line, t_data *data);
@@ -211,7 +215,7 @@ void					ft_verif_built3(char **cmds, t_data *data);
 int						ft_printf_fd(int fd, const char *s, ...);
 int						redirect2(t_data *data, t_list *tmp1);
 int						open_file2(int fd, t_list *tmp, t_data *data);
-t_here					*here_doc(t_data *data, char *str);
+int 					here_doc(t_data *data, char *str);
 int						count_hd(t_list *list);
 void					ft_getdelims(char *str, t_here *here, t_data *data);
 void					child_hd(t_data *data, char *str);
@@ -312,6 +316,7 @@ void					ctrlc(int sig);
 void					ctrlc_2(int sig);
 
 void					free_data(t_data *data);
+void	free_data_in_parent(t_data *data);
 // void		ft_positive(char *line);
 // t_list		*ft_lstnew(char content, t_data *dbl_list);
 // t_list		*ft_lstadd_back(t_list **lst, t_list *new);

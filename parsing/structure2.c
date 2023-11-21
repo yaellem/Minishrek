@@ -42,6 +42,7 @@ void	creat_list2(char *str, t_data *dbl_list, t_list **first, t_list **last)
 	list = *first;
 	while (str[++i] != '\0')
 		*last = ft_lstadd_back(&list, ft_lstnew2(dbl_list, str[i], ++j));
+	free(str);	
 }
 
 void	join_link2(t_list **first, t_list **last)
@@ -57,7 +58,7 @@ void	join_link2(t_list **first, t_list **last)
 			if (tmp->token == tmp->next->token && tmp->token != SIMPLE_QUOTE
 				&& tmp->token != DOUBLE_QUOTE)
 			{
-				tmp->content = ft_strjoin(tmp->content, tmp->next->content);
+				tmp->content = ft_strjoin_bis(tmp->content, tmp->next->content);
 				tmp2 = tmp->next;
 				tmp->next = tmp->next->next;
 				if (tmp2->next != NULL)
@@ -150,6 +151,7 @@ void 	free_tab2(char ***tab)
 		i++;
 	}
 	free(tab);
+	tab = NULL;
 }
 
 void 	free_tab(char ***tab)

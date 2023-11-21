@@ -108,22 +108,27 @@ char	*replace_dollar_return_code2(t_list *lst)
 	char	*str;
 	char	*tmp;
 
-	i = -1;
-	j = -1;
-	k = -1;
-	tmp = ft_itoa(lst->data->exit_code);
+	i = 0;
+	j = 0;
+	k = 0;
+	tmp = ft_itoa(((t_data*)g_data_signal_exit[1])->exit_code);
+	puts(tmp);
 	str = malloc(sizeof(char) * (ft_strlen(lst->content) + ft_strlen(tmp)));
-	while (lst->content[++i])
+	while (lst->content[i])
 	{
 		if (lst->content[i] == '?')
 		{
 			i = i + 1;
-			while (tmp[++k])
-				str[++j] = tmp[k];
+			while (tmp[k])
+				str[j++] = tmp[k++];
+			j--;
 		}
-		str[++j] = lst->content[i];
+		str[j++] = lst->content[i];
+		if (lst->content[i])
+			i++;
 	}
-	str[++j] = '\0';
+	str[j] = '\0';
+	printf("str = %s\n", str);
 	free (tmp);
 	free (lst->content);
 	return (str);

@@ -95,7 +95,7 @@ void	ctrlc(int sig)
 {
 	t_data *data;
 
-	data = starton();
+	data = (t_data *)g_data_signal_exit[1];
 	if (sig == SIGINT)
 	{
 		printf("\n");
