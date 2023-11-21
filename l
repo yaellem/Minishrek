@@ -1,0 +1,13 @@
+builtin
+l
+libft
+main.c
+main.o
+Makefile
+messages.h
+minishell
+minishell.h
+minishell.supp
+minishell_tester
+parsing
+pipex

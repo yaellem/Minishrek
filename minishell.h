@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   minishell.h                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: mpeulet <mpeulet@student.42.fr>            +#+  +:+       +#+        */
+/*   By: cabouzir <cabouzir@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/09/27 11:44:36 by mabed             #+#    #+#             */
-/*   Updated: 2023/11/20 14:05:22 by mpeulet          ###   ########.fr       */
+/*   Updated: 2023/11/21 16:18:11 by cabouzir         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -44,7 +44,7 @@
 typedef struct s_data	t_data;
 
 // extern int				g_status;
-extern	uint64_t			g_data_signal_exit[3];
+// extern	uint64_t			g_data_signal_exit[3];
 
 
 typedef enum e_signals
@@ -132,6 +132,7 @@ typedef struct s_data
 	int					n;
 	int					here_status;
 	int					cat;
+	char				*readlin_return;
 }						t_data;
 
 

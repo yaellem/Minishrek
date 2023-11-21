@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   parsing.c                                          :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: mpeulet <mpeulet@student.42.fr>            +#+  +:+       +#+        */
+/*   By: cabouzir <cabouzir@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/04/15 19:14:24 by mabed             #+#    #+#             */
-/*   Updated: 2023/11/20 11:31:49 by mpeulet          ###   ########.fr       */
+/*   Updated: 2023/11/21 15:20:36 by cabouzir         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -40,7 +40,7 @@ char	*access_check(char **env, char *cmd)
 	if (!cmd)
 		return (ft_putstr_fd("command not found\n", 2), NULL);
 	if (ft_strchr(cmd, '/'))
-		return (cmd);
+		return (ft_strdup(cmd));
 	while (env[j])
 	{
 		tmp = ft_strjoin("/", cmd);

@@ -6,7 +6,7 @@
 /*   By: cabouzir <cabouzir@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/11/07 13:23:40 by mpeulet           #+#    #+#             */
-/*   Updated: 2023/11/13 05:49:50 by cabouzir         ###   ########.fr       */
+/*   Updated: 2023/11/21 17:28:06 by cabouzir         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -47,13 +47,13 @@ void	print_export(char **tab, int *index, int size)
 		sub = ft_strchr(tab[index[i]], '=');
 		if (!sub)
 		{
-			printf("export %s\n", split[0]);
+			// printf("export %s\n", split[0]);
 			free_tab1(split);
 			continue ;
 		}
 		if (sub[1] == '"')
 			sub = "\"";
-		printf("export %s=\"%s\"\n", split[0], sub + 1);
+		// printf("export %s=\"%s\"\n", split[0], sub + 1);
 		free_tab1(split);
 	}
 }

@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   pipex.c                                            :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: mpeulet <mpeulet@student.42.fr>            +#+  +:+       +#+        */
+/*   By: cabouzir <cabouzir@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/03/30 11:11:49 by mabed             #+#    #+#             */
-/*   Updated: 2023/11/20 15:43:02 by mpeulet          ###   ########.fr       */
+/*   Updated: 2023/11/21 15:53:43 by cabouzir         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,12 +17,14 @@ void	free_data_in_subprocess(t_data *data)
 {
 		free_tab2(data->tb_cmd);
 		data->tb_cmd = NULL;
-		free(data->exec->pids);
-		data->exec->pids = NULL;
-		free(data->exec->cmdpath);
-		data->exec->cmdpath = NULL;
-		free_tab1(data->exec->path);
-		data->exec->path = NULL;
+		if (data->exec){
+			free(data->exec->pids);
+			data->exec->pids = NULL;
+			//free(data->exec->cmdpath);
+			//data->exec->cmdpath = NULL;
+			free_tab1(data->exec->path);
+			data->exec->path = NULL;	
+		}
 		free(data->exec);
 		data->exec = NULL;
 		free_data(data);
@@ -32,12 +34,14 @@ void	free_data_in_parent(t_data *data)
 {
 		free_tab2(data->tb_cmd);
 		data->tb_cmd = NULL;
-		free(data->exec->pids);
-		data->exec->pids = NULL;
-		free(data->exec->cmdpath);
-		data->exec->cmdpath = NULL;
-		free_tab1(data->exec->path);
-		data->exec->path = NULL;
+		if (data->exec){
+			free(data->exec->pids);
+			data->exec->pids = NULL;
+		//	free(data->exec->cmdpath);
+		//	data->exec->cmdpath = NULL;
+			free_tab1(data->exec->path);
+			data->exec->path = NULL;	
+		}
 		free(data->exec);
 		data->exec = NULL;
 }
@@ -64,18 +68,22 @@ void	loop_cmd(t_data *data)
 			free_data_in_parent(data);
 			return;
 		}
-	}	
+	}
+
 	while (i < data->nb_cmd)
 	{
 		data->exec->cmds = data->tb_cmd[i];
+		
 		if ((data->exec->cmdpath = access_check(data->exec->path, data->exec->cmds[0])) == NULL)
 		{
 			i++;
+			free(data->exec->cmdpath);
+			data->exec->cmdpath = NULL;
 			data->exit_code = 130;
 			continue;
 		}	
 		data->exec->j = i;
-		if (pipe(data->exec->fd) == -1)
+		if (data->nb_cmd > 1 && pipe(data->exec->fd) == -1)
 			free_all_data(data, 1, i);
 		data->exec->pids[i] = fork();
 		if (data->exec->pids[i] == -1)
@@ -85,7 +93,7 @@ void	loop_cmd(t_data *data)
 		else
 		{
 			signal(SIGQUIT, ctrlc_2);
-			close(data->exec->fd[1]);
+			// close(data->exec->fd[1]);
 			if (data->exec->prev != -1)
 				close(data->exec->prev);
 			data->exec->prev = data->exec->fd[0];
@@ -120,6 +128,8 @@ void	child_process_2(t_data *data, char ***cmds, int i, t_list **tmp)
 	j = 0;
 	ex = 0;
 
+	free(data->exec->cmdpath);
+	data->exec->cmdpath = NULL;
 	data->n = data->n + 1;
 	signal(SIGINT, &antislash);
 	signal(SIGQUIT, &antislash);
@@ -152,6 +162,8 @@ void	child_process_2(t_data *data, char ***cmds, int i, t_list **tmp)
 		ft_putchar_fd(' ', 2);
 		ft_putendl_fd(strerror(errno), 2);
 	}
+	free(data->exec->cmdpath);
+	data->exec->cmdpath = NULL;
 	free_data_in_subprocess(data);
 	exit(127);
 }

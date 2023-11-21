@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   main.c                                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: mpeulet <mpeulet@student.42.fr>            +#+  +:+       +#+        */
+/*   By: cabouzir <cabouzir@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/09/27 13:28:13 by mpeulet           #+#    #+#             */
-/*   Updated: 2023/11/17 12:54:37 by mpeulet          ###   ########.fr       */
+/*   Updated: 2023/11/21 17:28:37 by cabouzir         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -55,7 +55,7 @@ int main(int ac, char **av, char **env)
 		else if (!ft_strncmp(line, "cd", 2))
 		{
 			cdd = ft_split(line, 32);
-			printf("cd return code [%d]\n", cd(cdd, env_cpy));
+			// printf("cd return code [%d]\n", cd(cdd, env_cpy));
 			free_tab(cdd);
 		}
 		else if (!ft_strcmp(line, "env"))

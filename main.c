@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   main.c                                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: mpeulet <mpeulet@student.42.fr>            +#+  +:+       +#+        */
+/*   By: cabouzir <cabouzir@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/10/02 15:21:00 by mabed             #+#    #+#             */
-/*   Updated: 2023/11/20 15:03:51 by mpeulet          ###   ########.fr       */
+/*   Updated: 2023/11/21 16:34:47 by cabouzir         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -90,8 +90,8 @@ void	free_data(t_data *data)
 	}
 	free(data->here);
 	data->here = NULL;
-	free(data);
-	data = NULL;
+	// free(data);
+//	data = NULL;
 }
 
 int	main(int ac, char **av, char **env)
@@ -114,7 +114,9 @@ int	main(int ac, char **av, char **env)
 	{
 		signal(SIGQUIT, SIG_IGN);
 		signal(SIGINT, &ctrlc);
+		errno = 0;
 		line = readline("minishell$ ");
+		data->readlin_return = line;
 		if (!line)
 			break ;
 		if (!*line)
@@ -123,7 +125,8 @@ int	main(int ac, char **av, char **env)
 			continue ;
 		add_history(line);
 		str = ft_strdup(line);
-		g_data_signal_exit[2] = (uint64_t)str; // Used to free in child of here doc
+		data->readlin_return = str;
+		// g_data_signal_exit[2] = (uint64_t)str; // Used to free in child of here doc
 		if (verif_quote(line, data) <= 0)
 		{
 			ft_negative(line);
@@ -147,6 +150,14 @@ int	main(int ac, char **av, char **env)
 					if (data->tb_cmd[0] != NULL && data->tb_cmd && data->tb_cmd[0][0] && data->here_status == 0)
 						loop_cmd(data);
 					data->here_status = 0;
+					while (data->here && i < data->nb_here)
+					{
+						free(data->here[i].delim);
+						data->here[i].delim = NULL;
+						i++;
+					}
+					free(data->here);
+					data->here = NULL;
 				}
 			}
 		}

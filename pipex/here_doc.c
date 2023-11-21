@@ -6,7 +6,7 @@
 /*   By: cabouzir <cabouzir@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/11/12 00:16:31 by cabouzir          #+#    #+#             */
-/*   Updated: 2023/11/19 21:10:38 by cabouzir         ###   ########.fr       */
+/*   Updated: 2023/11/21 16:37:16 by cabouzir         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -25,7 +25,8 @@ static void	exit_hd(int sig)
 	t_data	*data;
 	int		i;
 
-	data = (t_data *)g_data_signal_exit[1];
+	// data = (t_data *)g_data_signal_exit[1];
+	data = (t_data *)starton();
 	if (sig == SIGINT)
 	{
 		ft_putchar_fd('\n', 2);
@@ -35,10 +36,11 @@ static void	exit_hd(int sig)
 			close(data->here[i].pipe[1]);
 			close(data->here[i].pipe[0]);
 		}
-		free((void *)g_data_signal_exit[2]);
-		free_data((t_data *)g_data_signal_exit[1]);
-		g_data_signal_exit[1] = 0;
-		g_data_signal_exit[2] = 0;
+		free(data->readlin_return);
+		data->readlin_return = NULL;
+		free_data((t_data *)data);
+		// g_data_signal_exit[1] = 0;
+		// g_data_signal_exit[2] = 0;
 		exit(130);
 	}
 }
@@ -50,6 +52,8 @@ int 	here_doc(t_data *data, char *str)
 	pid_t	pid;
 
 	data->nb_here = count_hd(data->first);
+	printf("here doc nb = %d\n", data->nb_here);
+	data->here = NULL;
 	if (!data->nb_here)
 		return (TRUE);
 	data->here = ft_calloc(sizeof(t_here), data->nb_here);
@@ -85,6 +89,14 @@ int 	here_doc(t_data *data, char *str)
 		free_data_in_parent(data);
 		return (FALSE);
 	}
+	// for (int i = 0; i < data->nb_here; i++)
+	// {
+	// 	free(data->here[i].delim);
+	// 	data->here[i].delim = NULL;
+	// 	i++;
+	// }
+	//free(data->here);
+	//data->here = NULL;
 	return (TRUE);
 }
 
@@ -150,13 +162,21 @@ void	child_hd(t_data *data, char *str)
 	int	i;
 
 	data->n = data->n + 1;
-	(void)str;
 	i = -1;
 	while (++i < data->nb_here)
 		openfileshd(i, data->here);
 	printf("Child hd before free data\n");
 	free(str);
+	for (int i = 0; i < data->nb_here; i++)
+		{
+			free(data->here[i].delim);
+			data->here[i].delim = NULL;
+			i++;
+		}
+		free(data->here);
+		data->here = NULL;
 	free_data(data);
+	printf("IN HERE DOC CHILD\n");
 	exit(1);
 }
 

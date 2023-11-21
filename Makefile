@@ -3,12 +3,14 @@
 #                                                         :::      ::::::::    #
 #    Makefile                                           :+:      :+:    :+:    #
 #                                                     +:+ +:+         +:+      #
-#    By: mpeulet <mpeulet@student.42.fr>            +#+  +:+       +#+         #
+#    By: cabouzir <cabouzir@student.42.fr>          +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2023/09/20 15:02:24 by mabed             #+#    #+#              #
-#    Updated: 2023/11/20 12:56:08 by mpeulet          ###   ########.fr        #
+#    Updated: 2023/11/21 15:09:16 by cabouzir         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
+
+PWD = `pwd`
 
 SRCS	= 	main.c $(addprefix parsing/, verif_quote.c enum.c structure.c syntax_error.c env.c dollar_quote.c dollar_quote2.c dollar.c dollar2.c structure2.c)\
 			$(addprefix pipex/, builtin.c pipex.c here_doc.c here_doc_utils.c free.c parsing.c redirect_fd.c )\
@@ -24,7 +26,7 @@ CC		= gcc
 CFLAGS	= -Wall -Wextra -Werror -g3
 
 VMINI	= valgrind --leak-check=full --show-leak-kinds=all --track-origins=yes --trace-children=yes\
-					 --suppressions=/home/moi/Minishrek/minishell.supp
+					 --suppressions=$(PWD)/minishell.supp
 
 .c.o:
 			${CC} ${CFLAGS} -c $< -o ${<:.c=.o}

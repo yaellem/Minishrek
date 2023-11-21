@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   dollar.c                                           :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: mabed <mabed@student.42.fr>                +#+  +:+       +#+        */
+/*   By: cabouzir <cabouzir@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/10/16 15:53:17 by mabed             #+#    #+#             */
-/*   Updated: 2023/11/15 11:28:57 by mabed            ###   ########.fr       */
+/*   Updated: 2023/11/21 16:19:00 by cabouzir         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -111,7 +111,7 @@ char	*replace_dollar_return_code2(t_list *lst)
 	i = 0;
 	j = 0;
 	k = 0;
-	tmp = ft_itoa(((t_data*)g_data_signal_exit[1])->exit_code);
+	tmp = ft_itoa(lst->data->exit_code);
 	puts(tmp);
 	str = malloc(sizeof(char) * (ft_strlen(lst->content) + ft_strlen(tmp)));
 	while (lst->content[i])

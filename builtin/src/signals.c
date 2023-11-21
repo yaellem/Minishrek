@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   signals.c                                          :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: mpeulet <mpeulet@student.42.fr>            +#+  +:+       +#+        */
+/*   By: cabouzir <cabouzir@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/11/10 15:22:21 by mpeulet           #+#    #+#             */
-/*   Updated: 2023/11/20 14:17:06 by mpeulet          ###   ########.fr       */
+/*   Updated: 2023/11/21 16:12:46 by cabouzir         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -95,7 +95,8 @@ void	ctrlc(int sig)
 {
 	t_data *data;
 
-	data = (t_data *)g_data_signal_exit[1];
+	data = (t_data *)starton();
+	// data = (t_data *)g_data_signal_exit[1];
 	if (sig == SIGINT)
 	{
 		printf("\n");
@@ -128,19 +129,19 @@ void	ctrlc_child(int sig)
 }
 
 // Might be usefull but commented to test
-/*t_data	*starton(void)
+t_data	*starton(void)
 {
-	static t_data	data;
+	 static t_data	data = {0};
 
 	return (&data);
-}*/
-
-t_data *starton(void)
-{
-	t_data *data = malloc(sizeof(t_data));
-	ft_memset(data, 0, sizeof(t_data));
-	return data;
 }
+
+// t_data *starton(void)
+// {
+// 	t_data *data = malloc(sizeof(t_data));
+// 	ft_memset(data, 0, sizeof(t_data));
+// 	return data;
+// }
 
 /*int	config_signals(int config)
 {

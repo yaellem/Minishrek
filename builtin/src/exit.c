@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   exit.c                                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: mpeulet <mpeulet@student.42.fr>            +#+  +:+       +#+        */
+/*   By: cabouzir <cabouzir@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/09/27 12:54:14 by mpeulet           #+#    #+#             */
-/*   Updated: 2023/11/20 15:51:14 by mpeulet          ###   ########.fr       */
+/*   Updated: 2023/11/21 17:26:01 by cabouzir         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -57,8 +57,8 @@ int	exit_builtin(char **cmd, t_data *data, int e)
 	char		*cmd1;
 
 	(void)data;
-	if (e == 1)
-		printf("exit\n");
+	// if (e == 1)
+	// 	printf("exit\n");
 	if (!cmd[1])
 	{
 		free_data(data);
