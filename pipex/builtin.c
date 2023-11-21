@@ -25,31 +25,31 @@
 int ft_verif_built(char **cmds, t_data *data)
 {
 	if (ft_strcmp(cmds[0], "echo") == 0)
-		return (echo(cmds), -42);
+		return (echo(cmds), BUILTIN_RET);
 	// else if (ft_strcmp(cmds[0], "cd") == 0)
 	// 	return (cd(cmds, data), -42);
 	else if (ft_strcmp(cmds[0], "cd") == 0)
 	{
 		if (cd(cmds, data) == 0)
-			return (-42);
+			return (BUILTIN_RET);
 		else
 			return (1);
-		// return (cd(cmds, data), -42);
+		// return (cd(cmds, data), BUILTIN_RET);
 	}
 	else if (ft_strcmp(cmds[0], "pwd") == 0)
-		return (pwd(), -42);
+		return (pwd(), BUILTIN_RET);
 	else if (ft_strcmp(cmds[0], "export") == 0)
 	{
-		return (export(cmds, data), -42);
+		return (export(cmds, data), BUILTIN_RET);
 	}
 	else if (ft_strcmp(cmds[0], "unset") == 0)
-		return (unset(cmds, &data->envi), -42);
+		return (unset(cmds, &data->envi), BUILTIN_RET);
 	else if (ft_strcmp(cmds[0], "env") == 0)
-		return (env_builtin(data->envi), -42);
+		return (env_builtin(data->envi), BUILTIN_RET);
 	else if (ft_strcmp(cmds[0], "exit") == 0)
-		return (exit_builtin(cmds, data, 1), -42);
+		return (exit_builtin(cmds, data, 1), BUILTIN_RET);
 	else
-		return (-1);
+		return (NO_BUILTIN);
 }
 
 void ft_verif_built2(char **cmds, t_data *data)

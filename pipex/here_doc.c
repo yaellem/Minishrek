@@ -12,42 +12,6 @@
 
 #include "../minishell.h"
 
-// int	get_len_word(char *str)
-// {
-// 	int	i;
-// 	int	r;
-
-// 	i = 0;
-// 	r = 0;
-// 	while (str[i] && (str[i] == ' ' || str[i] == '\t'))
-// 		i++;
-// 	while (str[i] && str[i] != ' ' && str[i] != '\t' && !ft_strchr("><|&",
-// 			str[i]))
-// 	{
-// 		i++;
-// 		r++;
-// 	}
-// 	return (r);
-// }
-
-// char	*get_word(char *str)
-// {
-// 	int		i;
-// 	int		r;
-// 	char	*new;
-
-// 	new = malloc(get_len_word(str) + 1);
-// 	i = 0;
-// 	r = 0;
-// 	while (str[i] && (str[i] == ' ' || str[i] == '\t'))
-// 		i++;
-// 	while (str[i] && str[i] != ' ' && str[i] != '\t' && !ft_strchr("><|&",
-// 			str[i]))
-// 		new[r++] = str[i++];
-// 	new[r] = 0;
-// 	return (new);
-// }
-
 t_here	*here_doc(t_data *data, char *str)
 {
 	int		i;
@@ -68,24 +32,16 @@ t_here	*here_doc(t_data *data, char *str)
 	{
 		while (++i < data->nb_here)
 			close(data->here[i].pipe[1]);
-		// config_signals(DEFAULT_SIG);
 	}
-	// signal(SIGINT, &ctrlc);
-	// signal(SIGINT, &ctrlc);
 	int stat = 0;
 	waitpid(pid, &stat, 0);
 	if (WIFEXITED(stat))
-	{
 		stat = WEXITSTATUS(stat);
-		// printf("------------------------> %d\n", stat);
-	}
 	if (stat == 130)
 	{
 		data->here_status = 1;
 		data->exit_code = 130;
-		// printf("------------------------> %d\n", stat);
 	}
-	// config_signals(DEFAULT_SIG);
 	return (NULL);
 }
 
@@ -102,18 +58,6 @@ int	count_hd(t_list *list)
 			nb++;
 		tmp = tmp->next;
 	}
-	// {
-	// 	if (str[i] == '<')
-	// 	{
-	// 		i++;
-	// 		if (str[i] == '<')
-	// 		{
-	// 			nb++;
-	// 			i++;
-	// 		}
-	// 	}
-	// 	i++;
-	// }
 	return (nb);
 }
 
@@ -206,6 +150,7 @@ void	child_hd(t_data *data, char *str)
 	i = -1;
 	while (++i < data->nb_here)
 		openfileshd(i, data->here);
+	free(str);
 	free_data(data);
 	// ici free TOUT CE QUI A ETE ALLOUEE avant d'avoir appele la fonction heredoc
 	exit(1);

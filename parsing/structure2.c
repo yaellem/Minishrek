@@ -74,63 +74,59 @@ void	join_link2(t_list **first, t_list **last)
 
 char	***tab_cmd(t_data *data)
 {
-	int		i;
-	// int		j;
-	// int		k;
+	int 	nb_cmd;
 	char	***tab;
-	t_list	*tmp;
-
-	i = 1;
-	tmp = data->first;
-	while (tmp != NULL)
+	t_list	*head;
+	
+	nb_cmd = 1;
+	head = data->first;
+	while (head != NULL)
 	{
-		if (tmp->token == PIPE)
-			i++;
-		tmp = tmp->next;
+		if (head->token == PIPE)
+			nb_cmd++;
+		head = head->next;
 	}
-	data->nb_cmd = i;
-	tab = malloc(sizeof(char **) * (i + 1));
-	if (!tab)
+	data->nb_cmd = nb_cmd;
+	if ((tab = malloc(sizeof(char **) * (nb_cmd + 1))) == NULL)
 		return (NULL);
-	tmp = data->first;
-	i = 0;
-	while (tmp != NULL)
-	{
-		if (sub_tab_cmd(&tmp, &tab, &i) == -1)
-			return (NULL);
-	}
-	tab[i] = NULL;
+	ft_bzero((void*)tab, sizeof(char **) * (nb_cmd + 1));
+	tab = sub_tab_cmd(data->first, tab);
 	return (tab);
 }
 
 
-int 	sub_tab_cmd(t_list **tmp_datafirst, char ****tab, int *i)
+char 	***sub_tab_cmd(t_list *user_input_first, char ***tab)
 {
-	int	k;
+	int	n_cmd;
+	int i;
 	int	j;
 
+	i = 0;
 	j = 0;
-	k = nb_cmd(*tmp_datafirst);
-	(*tab)[*i] = malloc(sizeof(char *) * (k + 1));
-	if (!(*tab)[*i])
-		return (free_tab(*tab), -1);
-	while (*tmp_datafirst != NULL && (*tmp_datafirst)->token != PIPE)
+	while (user_input_first)
 	{
-		if ((*tmp_datafirst)->token == CMD && (*tmp_datafirst)->content[0] != '\0')
+		n_cmd = nb_cmd(user_input_first);
+		if (!(tab[i] = malloc(sizeof(char *) * (n_cmd + 1))))
+			return (free_tab(tab), NULL);
+		while (user_input_first != NULL && user_input_first->token != PIPE)
 		{
-			(*tab)[*i][j] = ft_strdup((*tmp_datafirst)->content);
-			if (!(*tab)[*i][j])
-				return (free_tab2(*tab), -1);
-			//printf("addr of tab[i][j] = %p\n", (*tab)[*i][j]);
-			j++;
+			if (user_input_first->token == CMD && user_input_first->content[0] != '\0')
+			{
+				tab[i][j] = ft_strdup(user_input_first->content);
+				if (!tab[i][j])
+					return (free_tab2(tab), NULL);
+				j++;
+			}
+			user_input_first = user_input_first->next;
 		}
-		(*tmp_datafirst) = (*tmp_datafirst)->next;
+		tab[i][j] = NULL;
+		if (user_input_first)
+			user_input_first = user_input_first->next;
+		i++;
+		j = 0;
+
 	}
-	(*tab)[*i][j] = NULL;
-	if ((*tmp_datafirst) != NULL)
-		*tmp_datafirst = (*tmp_datafirst)->next;
-	(*i)++;
-	return (0);
+	return (tab);
 }
 void 	free_tab2(char ***tab)
 {

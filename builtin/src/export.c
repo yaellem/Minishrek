@@ -168,7 +168,6 @@ int	export(char **cmd, t_data *data)
 	char **tmp;
 	i = 1;
 
-	printf("IM EXPORT FUNNNNC\n");
 	if (!cmd[1])
 		return (export_noargs(data->envi), 1);
 	while (cmd[i])
@@ -180,12 +179,9 @@ int	export(char **cmd, t_data *data)
 			i++;
 			continue ;
 		}
-		// free_tab1(data->envi);
-		printf("IN EXPORT DATA EN ADDR = %p\n", data->envi);
 		tmp = update_env_tmp(data->envi, cmd[i], &data->env_list);
 		free_tab1(data->envi);
 		data->envi = tmp;
-		printf("IN EXPORT DATA NEW ADDR = %p\n", data->envi);
 		i++;
 	}
 	return (0);

@@ -20,12 +20,10 @@ void	free_list(t_list *lst)
 
 	while (lst != NULL)
 	{
-		printf("lst->content = %s\n", lst->content);
 		tmp = lst->next;
 		free(lst->content);
 		lst->content = NULL;
 		free(lst);
-		//lst = NULL;
 		lst = tmp;
 	}
 }
@@ -68,15 +66,9 @@ void	free_data(t_data *data)
 	free_list(data->first);
 	free_list_env(data->env_list);
 	free_tab2(data->tb_cmd);
-		printf("IN FREE MAIN EN ADDR = %p\n", data->envi);
-
 	free_tab1(data->envi);
-
-	// free(data->exec->pids);
-	// free_tab1(data->exec->path);
 	free(data->exec);
 	data->exec = NULL;
-
 	while (i < data->nb_here)
 	{
 		free(data->here[i].delim);
@@ -132,29 +124,25 @@ int	main(int ac, char **av, char **env)
 				get_token4(&data->first);
 				get_token5(&data->first);
 				data->tb_cmd = tab_cmd(data);
-				init(data);
+				input_lexer(data);
 				here_doc(data, str);
 				free(str);
+				str = NULL;
 				if (data->tb_cmd[0] != NULL && data->tb_cmd && data->tb_cmd[0][0] && data->here_status == 0)
 					loop_cmd(data);
 				data->here_status = 0;
-
-				free_tab2(data->tb_cmd);
-				data->tb_cmd = NULL;
-				free(data->exec->pids);
-				data->exec->pids = NULL;
-				free_tab1(data->exec->path);
-				data->exec->path = NULL;
-				free(data->exec);
-				data->exec = NULL;
-				//free_data(data);
-
 			}
-			// printf("first = %p, last = %p\n", data->first, data->first);
-			// free_list(data->first);
-
-
 		}
+		free(str);
+		str = NULL;
+		// free_tab2(data->tb_cmd);
+		// data->tb_cmd = NULL;
+		// free(data->exec->pids);
+		// data->exec->pids = NULL;
+		// free(data->exec);
+		// data->exec = NULL;
+		free_list(data->first);
+		data->first = NULL;
 	}
 	i = data->exit_code;
 	free_data(data);

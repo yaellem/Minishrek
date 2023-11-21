@@ -36,6 +36,9 @@
 
 # define MAX_PWD 2048
 # define LL_MAXOU 9223372036854775807ULL
+#define BUILTIN_RET -42
+#define BUILTIN_ERR 1
+#define NO_BUILTIN  -1
 
 typedef struct s_data	t_data;
 
@@ -180,7 +183,7 @@ int						nb_cmd(t_list *lst);
 void					get_token3(t_list **list);
 void					get_token4(t_list **list);
 void					get_token5(t_list **list);
-int						sub_tab_cmd(t_list **tmp, char ****tab, int *i);
+char					***sub_tab_cmd(t_list *user_input_first, char ***tab);
 void					free_tab2(char ***tab);
 void					free_tab(char ***tab);
 void					ctrlc_child(int sig);
@@ -200,7 +203,7 @@ void					child_process_2(t_data *data, char ***cmds, int i,
 							t_list **tmp);
 // void					child_process_2(t_data *data, char ***cmds, int i);
 void					loop_cmd(t_data *data);
-int						init(t_data *data);
+int						input_lexer(t_data *data);
 void					exec_cmd(t_data *data);
 int						ft_verif_built(char **cmds, t_data *data);
 void					ft_verif_built2(char **cmds, t_data *data);

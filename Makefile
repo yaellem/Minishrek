@@ -24,7 +24,7 @@ CC		= gcc
 CFLAGS	= -Wall -Wextra -Werror -g3
 
 VMINI	= valgrind --leak-check=full --show-leak-kinds=all --track-origins=yes --trace-children=yes\
-					 --suppressions=/mnt/nfs/homes/ymarcill/Documents/minishrek_20.11-16h/minishrek/minishell.supp
+					 --suppressions=/home/moi/Minishrek/minishell.supp
 
 .c.o:
 			${CC} ${CFLAGS} -c $< -o ${<:.c=.o}
