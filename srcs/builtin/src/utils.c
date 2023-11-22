@@ -51,7 +51,7 @@ char	*ft_get_env(char *var_name, char **env)
 	while (env[++i])
 	{
 		if (!ft_strncmp(env[i], var_name, len) && env[i][len] == '=')
-			return (env[i] + len + 1);
+			return (ft_strdup(env[i] + len + 1));
 	}
 	return (NULL);
 }

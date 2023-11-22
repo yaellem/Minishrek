@@ -73,6 +73,7 @@ int	cd_minus2(char **cmd, char **env, t_data *data)
 		return (0);
 	else
 		modif_env(data, env_var);
+	free(env_var);
 	return (1);
 }
 
@@ -161,18 +162,34 @@ void    modif_env(t_data *data, char *new_pwd)
     while (tmp != NULL)
     {
         if (ft_strncmp(tmp->content, "PWD=", 4) == 0)
+		{
+			free(tmp->content);
             tmp->content = ft_strjoin("PWD=", new_pwd);
-        if (ft_strncmp(tmp->content, "OLDPWD=", 7) == 0)
-            tmp->content = ft_strjoin("OLDPWD=", str);
-        tmp = tmp->next;
+		}
+		if (ft_strncmp(tmp->content, "OLDPWD=", 7) == 0)
+        { 
+			free(tmp->content);
+		    tmp->content = ft_strjoin("OLDPWD=", str);
+		}
+		tmp = tmp->next;
     }
     i = 0;
     while (tmp_env[i])
     {
         if (ft_strncmp(tmp_env[i], "PWD=", 4) == 0)
+		{	
+			free(tmp_env[i]);
+	//		tmp_env[i] = NULL;
             tmp_env[i] = ft_strjoin("PWD=", new_pwd);
+		}
         else if (ft_strncmp(tmp_env[i], "OLDPWD=", 7) == 0)
+		{
+			free(tmp_env[i]);
+	//		tmp_env[i] = NULL;
             tmp_env[i] = ft_strjoin("OLDPWD=", str);
-        i++;
+		}
+		i++;
     }
+	free(str);
+
 }

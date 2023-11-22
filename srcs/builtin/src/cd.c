@@ -78,6 +78,7 @@ int	cd_home(char **cmd, char **env, t_data *data)
 		return (ft_printf_fd(2, ERR_CD, env_var, 0));
 	else
 		modif_env(data, env_var); // modifiction de l'environnement
+	free(env_var);
 	return (1);
 }
 
@@ -87,11 +88,18 @@ int	cd_minus(char **cmd, char **env, t_data *data)
 
 	env_var = ft_get_env("OLDPWD", env);
 	if (!env_var)
+	{
+		free(env_var);
 		return (ft_printf_fd(2, ERR_CD_OPWD, cmd[1]), 0);
+	}
 	if (chdir(env_var) == -1)
+	{
+		free(env_var);
 		return (ft_printf_fd(2, ERR_CD, cmd[1]), 0);
+	}
 	else
 		modif_env(data, env_var);
+	free(env_var);
 	return (1);
 }
 
@@ -137,8 +145,15 @@ int	cd(char **cmd, t_data *data)
 	else if (chdir(cmd[1]) == -1)
 		return (ft_printf_fd(2, ERR_CD, cmd[1]), 1);
 	else
-		modif_env(data, ft_strjoin(ft_strjoin(ft_get_env("PWD", data->envi),
-					"/"), cmd[1]));
+	{
+		char * var = ft_get_env("PWD", data->envi);
+		char * var2 = ft_strjoin(var, "/");
+		free(var);
+		var = ft_strjoin(var2, cmd[1]);
+		free(var2);
+		modif_env(data, var);
+		free(var);
+	}
 	return (0);
 }
 
