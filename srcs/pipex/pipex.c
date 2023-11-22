@@ -175,6 +175,8 @@ void	child_process_2(t_data *data, char ***cmds, int i, t_list **tmp)
 	{
 
 		execve(data->exec->cmdpath, data->exec->cmds, data->envi);
+		free(data->exec->cmdpath);
+		data->exec->cmdpath = NULL;
 		ft_putchar_fd(' ', 2);
 		ft_putendl_fd(strerror(errno), 2);
 	}

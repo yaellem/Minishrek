@@ -170,6 +170,8 @@ int	main(int ac, char **av, char **env)
 					}
 					free(data->here);
 					data->here = NULL;
+					free_data_in_parent(data);
+					
 				}
 			}
 		}
