@@ -44,10 +44,22 @@ void	reset_fd(int *myfds)
 	free(myfds);
 }
 
+int		check_builtin(char **cmds)
+{
+		if (ft_strcmp(cmds[0], "echo") == 0 ||
+			ft_strcmp(cmds[0], "cd") == 0  ||
+			ft_strcmp(cmds[0], "pwd") == 0 ||
+			ft_strcmp(cmds[0], "export") == 0 ||
+			ft_strcmp(cmds[0], "unset") == 0 ||
+			ft_strcmp(cmds[0], "env") == 0 ||
+			ft_strcmp(cmds[0], "exit") == 0)
+			return (TRUE);
+		return (FALSE);
+}
+
 void	loop_cmd(t_data *data)
 {
 	int		i;
-	int 	ret;
 	t_list	*tmp;
 	
 	tmp = data->first;
@@ -59,20 +71,18 @@ void	loop_cmd(t_data *data)
 	{
 		data->exec->j = i;
 		data->exec->cmds = data->tb_cmd[i];
-		int *fds;
-
-		fds = save_fd(data);
-		redirect2(data, tmp);
-		ret = ft_verif_built(data->exec->cmds, data);
-		if(ret != NO_BUILTIN) 
+		if (check_builtin(data->exec->cmds) == TRUE)
 		{
+			int *fds;
+
+			fds = save_fd(data);
+			redirect2(data, tmp);
+			ft_verif_built(data->exec->cmds, data);
 			data->exit_code = 0;
 			free_data_in_parent(data);
 			reset_fd(fds);
 			return;
-
 		}
-		reset_fd(fds);
 	}
 
 	while (i < data->nb_cmd)
@@ -88,7 +98,7 @@ void	loop_cmd(t_data *data)
 			continue;
 		}	
 		data->exec->j = i;
-		if (data->nb_cmd > 1 && pipe(data->exec->fd) == -1)
+		if (pipe(data->exec->fd) == -1)
 			free_all_data(data, 1, i);
 		data->exec->pids[i] = fork();
 		if (data->exec->pids[i] == -1)
