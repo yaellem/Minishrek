@@ -85,8 +85,16 @@ void	free_data(t_data *data)
 	data->env_list = NULL;
 	free_tab1(data->envi);
 	data->envi = NULL;
-
-	free_data_in_parent(data);
+	free_tab2(data->tb_cmd);
+	data->tb_cmd = NULL;
+	if (data->exec){
+		free(data->exec->pids);
+		data->exec->pids = NULL;
+		free_tab1(data->exec->path);
+		data->exec->path = NULL;	
+	}
+	free(data->exec);
+	data->exec = NULL;
 	while (i < data->nb_here && data->here)
 	{
 		free(data->here[i].delim);

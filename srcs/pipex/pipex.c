@@ -98,7 +98,8 @@ void	loop_cmd(t_data *data)
 		else
 		{
 			signal(SIGQUIT, ctrlc_2);
-			// close(data->exec->fd[1]);
+			if (data->nb_cmd > 1)
+				close(data->exec->fd[1]);
 			if (data->exec->prev != -1)
 				close(data->exec->prev);
 			data->exec->prev = data->exec->fd[0];
